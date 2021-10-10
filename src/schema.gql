@@ -2,15 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input CreateDoctorInput {
-  age: Int!
-  avatar: String!
-  bio: String!
-  name: String!
-  phone: String!
-  specialty: String!
-}
-
 input CreatePatientInput {
   age: Int!
   bio: String!
@@ -25,14 +16,14 @@ input CreatePatientInput {
 type Doctor {
   _id: String!
   age: Int!
-  avatar: String!
+  avatar: FileModel!
   bio: String!
   name: String!
   phone: String!
   specialty: String!
 }
 
-type File {
+type FileModel {
   _id: String!
   encoding: String!
   filename: String!
@@ -65,9 +56,10 @@ input ListPatientInput {
 type Mutation {
   createPatient(payload: CreatePatientInput!): Patient!
   deletePatient(_id: String!): Patient!
-  registerDoctor(payload: CreateDoctorInput!): Doctor!
+  registerDoctor(payload: RegisterDoctorInput!): User!
+  registerPatient(payload: RegisterPatientInput!): User!
   updatePatient(payload: UpdatePatientInput!): Patient!
-  uploadFile(file: Upload!): File!
+  uploadFile(file: Upload!): FileModel!
 }
 
 type Patient {
@@ -89,6 +81,26 @@ type Query {
   patients(filters: ListPatientInput): [Patient!]!
 }
 
+input RegisterDoctorInput {
+  age: Int!
+  avatar: String!
+  bio: String!
+  name: String!
+  phone: String!
+  specialty: String!
+}
+
+input RegisterPatientInput {
+  age: Int!
+  bio: String!
+  code: String!
+  dateOfBirth: String!
+  height: Int!
+  name: String!
+  phone: String!
+  weight: Int!
+}
+
 input UpdatePatientInput {
   _id: String!
   age: Int
@@ -103,3 +115,18 @@ input UpdatePatientInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type User {
+  _id: String!
+  age: Int!
+  avatar: FileModel
+  bio: String!
+  code: String
+  dateOfBirth: String
+  height: Int
+  name: String!
+  phone: String!
+  role: String!
+  specialty: String
+  weight: Int
+}

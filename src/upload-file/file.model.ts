@@ -4,7 +4,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @ObjectType()
 @Schema()
-export class File {
+export class FileModel {
   @Field(() => String)
   _id: MongooseSchema.Types.ObjectId;
 
@@ -25,6 +25,6 @@ export class File {
   mimetype: string;
 }
 
-export type FileDocument = File & Document;
+export type FileDocument = FileModel & Document;
 
-export const FileSchema = SchemaFactory.createForClass(File);
+export const FileSchema = SchemaFactory.createForClass(FileModel);

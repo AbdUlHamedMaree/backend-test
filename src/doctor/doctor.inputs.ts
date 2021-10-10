@@ -1,5 +1,5 @@
 import { Field, InputType, Int, PartialType } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
+import { Schema as MongooseSchema, Schema } from 'mongoose';
 
 @InputType()
 class Base {
@@ -19,7 +19,7 @@ class Base {
   bio: string;
 
   @Field(() => String)
-  avatar: string;
+  avatar: Schema.Types.ObjectId;
 }
 
 @InputType()

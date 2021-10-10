@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { FileModel } from 'src/upload-file/file.model';
 
 @ObjectType()
 @Schema()
@@ -28,11 +29,16 @@ export class Doctor {
   @Prop()
   bio: string;
 
-  @Field(() => String)
-  @Prop()
-  avatar: string;
+  @Field(() => FileModel)
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: FileModel.name })
+  avatar: MongooseSchema.Types.ObjectId | FileModel;
 }
-
 export type DoctorDocument = Doctor & Document;
 
-export const DoctorSchema = SchemaFactory.createForClass(Doctor);
+const DoctorSchema = SchemaFactory.createForClass(Doctor);
+
+DoctorSchema.pre('find', function () {
+  this.populate('avatar');
+});
+
+export { DoctorSchema };

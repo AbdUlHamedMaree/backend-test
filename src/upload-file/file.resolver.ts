@@ -1,14 +1,14 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
-import { File } from './file.model';
+import { FileModel } from './file.model';
 import { FileService } from './file.service';
 
-@Resolver(() => File)
+@Resolver(() => FileModel)
 export class FileResolver {
   constructor(private fileService: FileService) {}
 
-  @Mutation(() => File)
+  @Mutation(() => FileModel)
   async uploadFile(
     @Args('file', { type: () => GraphQLUpload })
     fileUpload: FileUpload,

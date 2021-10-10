@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 
 import { Doctor } from './doctor.model';
@@ -24,10 +24,23 @@ export class DoctorResolver {
   }
 
   @Mutation(() => Doctor)
-  async registerDoctor(@Args('payload') payload: CreateDoctorInput) {
+  async registerDoctor(
+    @Args('payload', { type: () => CreateDoctorInput })
+    payload: CreateDoctorInput,
+  ) {
     return this.doctorService.create(payload);
   }
 
+  // @ResolveField()
+  // async avatar(
+  //   @Parent() doctor: DoctorDocument,
+  //   @Args('populate') populate: boolean,
+  // ) {
+  //   if (populate)
+  //     await doctor.populate({ path: 'avatar', model: FileModel.name });
+
+  //   return doctor.avatar;
+  // }
   // @Mutation(() => Doctor)
   // async updateDoctor(@Args('payload') payload: UpdateDoctorInput) {
   //   return this.doctorService.update(payload);
