@@ -1,0 +1,105 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateDoctorInput {
+  age: Int!
+  avatar: String!
+  bio: String!
+  name: String!
+  phone: String!
+  specialty: String!
+}
+
+input CreatePatientInput {
+  age: Int!
+  bio: String!
+  code: String!
+  dateOfBirth: String!
+  height: Int!
+  name: String!
+  phone: String!
+  weight: Int!
+}
+
+type Doctor {
+  _id: String!
+  age: Int!
+  avatar: String!
+  bio: String!
+  name: String!
+  phone: String!
+  specialty: String!
+}
+
+type File {
+  _id: String!
+  encoding: String!
+  filename: String!
+  mimetype: String!
+  path: String!
+}
+
+input ListDoctorInput {
+  _id: String!
+  age: Int
+  avatar: String
+  bio: String
+  name: String
+  phone: String
+  specialty: String
+}
+
+input ListPatientInput {
+  _id: String!
+  age: Int
+  bio: String
+  code: String
+  dateOfBirth: String
+  height: Int
+  name: String
+  phone: String
+  weight: Int
+}
+
+type Mutation {
+  createPatient(payload: CreatePatientInput!): Patient!
+  deletePatient(_id: String!): Patient!
+  registerDoctor(payload: CreateDoctorInput!): Doctor!
+  updatePatient(payload: UpdatePatientInput!): Patient!
+  uploadFile(file: Upload!): File!
+}
+
+type Patient {
+  _id: String!
+  age: Int!
+  bio: String!
+  code: String!
+  dateOfBirth: String!
+  height: Int!
+  name: String!
+  phone: String!
+  weight: Int!
+}
+
+type Query {
+  doctor(_id: String!): Doctor!
+  doctors(filters: ListDoctorInput): [Doctor!]!
+  patient(_id: String!): Patient!
+  patients(filters: ListPatientInput): [Patient!]!
+}
+
+input UpdatePatientInput {
+  _id: String!
+  age: Int
+  bio: String
+  code: String
+  dateOfBirth: String
+  height: Int
+  name: String
+  phone: String
+  weight: Int
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
