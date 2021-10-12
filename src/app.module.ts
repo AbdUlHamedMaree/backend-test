@@ -1,15 +1,21 @@
-import { Module } from '@nestjs/common';
+import { Module, UnauthorizedException } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PatientModule } from './patient/patient.module';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import {
+  ApolloServerPluginInlineTrace,
+  ApolloServerPluginLandingPageLocalDefault,
+} from 'apollo-server-core';
 import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DoctorModule } from './doctor/doctor.module';
 import { FileModule } from './upload-file/file.module';
-import { Context } from 'graphql-ws';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
+import { IncomingMessage } from 'http';
+import { AUTH_COOKIE_KEY } from './constants';
+import { getCookie } from './utils/get-cookie';
+import { getJwtPayload } from './utils/get.jwt.payload';
 
 @Module({
   imports: [
@@ -18,23 +24,44 @@ import { UserModule } from './user/user.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      cors: {
+        origin: 'https://studio.apollographql.com',
+        credentials: true,
+      },
+      plugins: [
+        ApolloServerPluginLandingPageLocalDefault(),
+        ApolloServerPluginInlineTrace(),
+      ],
+      context: (ctx) => ctx,
+      installSubscriptionHandlers: true,
       subscriptions: {
-        'graphql-ws': {
-          onSubscribe: () => {
-            console.log('some one connected to the socket!!!');
+        'subscriptions-transport-ws': {
+          onDisconnect: () => {
+            console.log('some one disconnected!!!');
           },
-          onConnect: (context: Context<any>) => {
-            const { connectionParams } = context;
-            // the rest will remain the same as in the example above
+          onConnect: (_, __, connectionContext) => {
+            console.log('some one connect to the socket');
+            try {
+              const user = getJwtPayload(
+                getCookie(
+                  (connectionContext.request as IncomingMessage).headers.cookie,
+                  AUTH_COOKIE_KEY,
+                ),
+              );
+              console.log('Connected User:', user);
+              return { user };
+            } catch (err) {
+              console.error(err);
+              throw new UnauthorizedException();
+            }
           },
         },
       },
     }),
-    PatientModule,
-    DoctorModule,
     FileModule,
     UserModule,
+    AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -8,7 +8,7 @@ function isPatient(this: User) {
 }
 
 function isDoctor(this: User) {
-  return this.role === 'patient';
+  return this.role === 'doctor';
 }
 
 @ObjectType()
@@ -23,7 +23,7 @@ export class User {
   name: string;
 
   @Field(() => String)
-  @Prop()
+  @Prop({ unique: true })
   phone: string;
 
   @Field(() => Int)
@@ -54,6 +54,15 @@ export class User {
   @Field(() => String, { nullable: true })
   @Prop({ required: isPatient })
   code?: string;
+
+  @Field(() => FileModel, { nullable: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: User.name,
+    required: isPatient,
+    default: [],
+  })
+  favoriteDoctors?: MongooseSchema.Types.ObjectId[] | User[];
 
   // doctor
   @Field(() => String, { nullable: true })

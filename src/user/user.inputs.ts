@@ -17,15 +17,6 @@ class Base {
 }
 
 @InputType()
-export class RegisterDoctorInput extends Base {
-  @Field(() => String)
-  specialty: string;
-
-  @Field(() => String)
-  avatar: Schema.Types.ObjectId;
-}
-
-@InputType()
 export class RegisterPatientInput extends Base {
   @Field(() => String)
   dateOfBirth: string;
@@ -38,4 +29,22 @@ export class RegisterPatientInput extends Base {
 
   @Field(() => String)
   code: string;
+}
+
+@InputType()
+export class RegisterDoctorInput extends Base {
+  @Field(() => String)
+  specialty: string;
+
+  @Field(() => String)
+  avatar: Schema.Types.ObjectId;
+}
+
+@InputType()
+export class ListDoctorInput extends Base {
+  @Field(() => String)
+  specialty: string;
+
+  @Field(() => String)
+  avatar: Schema.Types.ObjectId;
 }

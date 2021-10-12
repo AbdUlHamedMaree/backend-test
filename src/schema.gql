@@ -2,25 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input CreatePatientInput {
-  age: Int!
-  bio: String!
-  code: String!
-  dateOfBirth: String!
-  height: Int!
-  name: String!
-  phone: String!
-  weight: Int!
+type Chat {
+  _id: String!
+  at: String!
+  content: String!
+  receiver: User!
+  sender: User!
 }
 
-type Doctor {
-  _id: String!
-  age: Int!
-  avatar: FileModel!
-  bio: String!
-  name: String!
-  phone: String!
-  specialty: String!
+input CreatePostInput {
+  cover: String!
+  description: String!
+  tags: [String!]!
+  title: String!
+  type: String!
 }
 
 type FileModel {
@@ -32,53 +27,48 @@ type FileModel {
 }
 
 input ListDoctorInput {
-  _id: String!
-  age: Int
-  avatar: String
-  bio: String
-  name: String
-  phone: String
-  specialty: String
+  age: Int!
+  avatar: String!
+  bio: String!
+  name: String!
+  phone: String!
+  specialty: String!
 }
 
-input ListPatientInput {
+input ListPostInput {
   _id: String!
-  age: Int
-  bio: String
-  code: String
-  dateOfBirth: String
-  height: Int
-  name: String
-  phone: String
-  weight: Int
+  cover: String
+  description: String
+  tags: [String!]
+  title: String
+  type: String
 }
 
 type Mutation {
-  createPatient(payload: CreatePatientInput!): Patient!
-  deletePatient(_id: String!): Patient!
+  createPost(payload: CreatePostInput!): Post!
+  deletePost(_id: String!): Post!
+  login(phone: String!): User!
   registerDoctor(payload: RegisterDoctorInput!): User!
   registerPatient(payload: RegisterPatientInput!): User!
-  updatePatient(payload: UpdatePatientInput!): Patient!
+  sendMessage(message: SendMessageInput!): Chat!
+  updatePost(payload: UpdatePostInput!): Post!
   uploadFile(file: Upload!): FileModel!
 }
 
-type Patient {
+type Post {
   _id: String!
-  age: Int!
-  bio: String!
-  code: String!
-  dateOfBirth: String!
-  height: Int!
-  name: String!
-  phone: String!
-  weight: Int!
+  cover: FileModel!
+  description: String!
+  tags: [String!]!
+  title: String!
+  type: String!
 }
 
 type Query {
-  doctor(_id: String!): Doctor!
-  doctors(filters: ListDoctorInput): [Doctor!]!
-  patient(_id: String!): Patient!
-  patients(filters: ListPatientInput): [Patient!]!
+  doctors(filters: ListDoctorInput!): [User!]!
+  me: User!
+  post(_id: String!): Post!
+  posts(filters: ListPostInput): [Post!]!
 }
 
 input RegisterDoctorInput {
@@ -101,16 +91,22 @@ input RegisterPatientInput {
   weight: Int!
 }
 
-input UpdatePatientInput {
+input SendMessageInput {
+  content: String!
+  receiver: String!
+}
+
+type Subscription {
+  messageSended: Chat!
+}
+
+input UpdatePostInput {
   _id: String!
-  age: Int
-  bio: String
-  code: String
-  dateOfBirth: String
-  height: Int
-  name: String
-  phone: String
-  weight: Int
+  cover: String
+  description: String
+  tags: [String!]
+  title: String
+  type: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -123,6 +119,7 @@ type User {
   bio: String!
   code: String
   dateOfBirth: String
+  favoriteDoctors: FileModel
   height: Int
   name: String!
   phone: String!
