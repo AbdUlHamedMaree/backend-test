@@ -22,8 +22,9 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  @UseGuards(GqlAuthGuard)
-  async doctors(@Args('filters') filters: ListDoctorInput) {
+  async doctors(
+    @Args('filters', { nullable: true }) filters?: ListDoctorInput,
+  ) {
     return this.userService.listDoctors(filters);
   }
 

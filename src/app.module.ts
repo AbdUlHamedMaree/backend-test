@@ -16,9 +16,16 @@ import { IncomingMessage } from 'http';
 import { AUTH_COOKIE_KEY } from './constants';
 import { getCookie } from './utils/get-cookie';
 import { getJwtPayload } from './utils/get.jwt.payload';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: process.env.PUBLIC_FILES_PREFIX,
+    }),
     MongooseModule.forRoot('mongodb://localhost:27017/testing-db'),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

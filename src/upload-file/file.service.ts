@@ -13,16 +13,13 @@ export class FileService {
   ) {}
 
   writeFile({ createReadStream, filename, encoding, mimetype }: FileUpload) {
-    return new Promise((resolve, reject) =>
-      createReadStream()
-        .pipe(
-          createWriteStream(
-            join(process.cwd(), `uploads/${nanoid()}_${filename}`),
-          ),
-        )
+    return new Promise((resolve, reject) => {
+      const newFilename = `/${nanoid()}_${filename}`;
+      return createReadStream()
+        .pipe(createWriteStream(join(process.cwd(), `uploads/${newFilename}`)))
         .once('finish', () => {
           const createdPatient = new this.fileModel({
-            path: join(process.cwd(), `uploads/${nanoid()}_${filename}`),
+            path: `/${newFilename}`,
             filename,
             encoding,
             mimetype,
@@ -33,7 +30,7 @@ export class FileService {
         .once('error', (err) => {
           console.error(err);
           reject(false);
-        }),
-    );
+        });
+    });
   }
 }

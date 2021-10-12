@@ -65,7 +65,7 @@ type Post {
 }
 
 type Query {
-  doctors(filters: ListDoctorInput!): [User!]!
+  doctors(filters: ListDoctorInput): [User!]!
   me: User!
   post(_id: String!): Post!
   posts(filters: ListPostInput): [Post!]!
@@ -119,7 +119,7 @@ type User {
   bio: String!
   code: String
   dateOfBirth: String
-  favoriteDoctors: FileModel
+  favoriteDoctors: [User!]
   height: Int
   name: String!
   phone: String!

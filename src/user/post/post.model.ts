@@ -41,4 +41,10 @@ PostSchema.pre('find', function () {
   this.populate('cover');
 });
 
+PostSchema.post('save', (doc, next) => {
+  doc.populate('cover').then(() => {
+    next();
+  });
+});
+
 export { PostSchema };

@@ -2,6 +2,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
+const resolveImagePath = (path: string) =>
+  `${process.env.HOST}${process.env.PUBLIC_FILES_PREFIX}${path}`;
+
 @ObjectType()
 @Schema()
 export class FileModel {
@@ -9,7 +12,7 @@ export class FileModel {
   _id: MongooseSchema.Types.ObjectId;
 
   @Field(() => String)
-  @Prop()
+  @Prop({ get: resolveImagePath })
   path: string;
 
   @Field(() => String)

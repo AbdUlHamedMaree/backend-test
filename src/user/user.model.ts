@@ -55,13 +55,15 @@ export class User {
   @Prop({ required: isPatient })
   code?: string;
 
-  @Field(() => FileModel, { nullable: true })
-  @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: User.name,
-    required: isPatient,
-    default: [],
-  })
+  @Field(() => [User], { nullable: true })
+  @Prop([
+    {
+      type: MongooseSchema.Types.ObjectId,
+      ref: User.name,
+      required: isPatient,
+      default: [],
+    },
+  ])
   favoriteDoctors?: MongooseSchema.Types.ObjectId[] | User[];
 
   // doctor
@@ -83,7 +85,13 @@ export type UserDocument = User & Document;
 const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre('find', function () {
-  this.populate('avatar');
+  this.populate('avatar').populate('favoriteDoctors');
+});
+
+UserSchema.post('save', (doc, next) => {
+  Promise.all([doc.populate('avatar'), doc.populate('favoriteDoctors')]).then(
+    () => next(),
+  );
 });
 
 export { UserSchema };

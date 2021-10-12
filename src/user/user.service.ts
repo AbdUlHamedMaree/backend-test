@@ -22,5 +22,5 @@ export class UserService {
   registerPatient = (payload: RegisterPatientInput) =>
     new this.userModel({ ...payload, role: 'patient' }).save();
 
-  listDoctors = (filters: ListDoctorInput) => this.userModel.find({ filters });
+  listDoctors = (filters?: ListDoctorInput) => this.userModel.find({ filters });
 }
