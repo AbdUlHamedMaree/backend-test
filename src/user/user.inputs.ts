@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType, Int, PartialType } from '@nestjs/graphql';
 import { Schema } from 'mongoose';
 
 @InputType()
@@ -41,10 +41,13 @@ export class RegisterDoctorInput extends Base {
 }
 
 @InputType()
-export class ListDoctorInput extends Base {
-  @Field(() => String)
-  specialty: string;
+export class ListDoctorInput extends PartialType(Base) {
+  @Field(() => String, { nullable: true })
+  _id?: string;
 
-  @Field(() => String)
-  avatar: Schema.Types.ObjectId;
+  @Field(() => String, { nullable: true })
+  specialty?: string;
+
+  @Field(() => String, { nullable: true })
+  avatar?: Schema.Types.ObjectId;
 }

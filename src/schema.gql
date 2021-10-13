@@ -27,16 +27,17 @@ type FileModel {
 }
 
 input ListDoctorInput {
-  age: Int!
-  avatar: String!
-  bio: String!
-  name: String!
-  phone: String!
-  specialty: String!
+  _id: String
+  age: Int
+  avatar: String
+  bio: String
+  name: String
+  phone: String
+  specialty: String
 }
 
 input ListPostInput {
-  _id: String!
+  _id: String
   cover: String
   description: String
   tags: [String!]
@@ -65,10 +66,12 @@ type Post {
 }
 
 type Query {
+  addDoctorToFavorites(doctorId: String!): User!
   doctors(filters: ListDoctorInput): [User!]!
   me: User!
   post(_id: String!): Post!
   posts(filters: ListPostInput): [Post!]!
+  removeDoctorToFavorites(doctorId: String!): User!
 }
 
 input RegisterDoctorInput {

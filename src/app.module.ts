@@ -15,9 +15,11 @@ import { ChatModule } from './chat/chat.module';
 import { IncomingMessage } from 'http';
 import { AUTH_COOKIE_KEY } from './constants';
 import { getCookie } from './utils/get-cookie';
-import { getJwtPayload } from './utils/get.jwt.payload';
+import { getJwtPayload } from './utils/get-jwt-payload';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
+import { RolesGuard } from './role/role.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { ConfigModule } from '@nestjs/config';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: process.env.PUBLIC_FILES_PREFIX,
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/testing-db'),
+    MongooseModule.forRoot('mongodb://localhost:27017/backend-test'),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
@@ -39,7 +41,7 @@ import { ConfigModule } from '@nestjs/config';
         ApolloServerPluginLandingPageLocalDefault(),
         ApolloServerPluginInlineTrace(),
       ],
-      context: (ctx) => ctx,
+      context: ({ req, res }) => ({ req, res }),
       installSubscriptionHandlers: true,
       subscriptions: {
         'subscriptions-transport-ws': {
@@ -71,6 +73,12 @@ import { ConfigModule } from '@nestjs/config';
     ChatModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

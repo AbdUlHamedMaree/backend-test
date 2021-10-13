@@ -24,7 +24,7 @@ export class CreatePostInput extends Base {}
 
 @InputType()
 export class ListPostInput extends PartialType(Base) {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   _id?: Schema.Types.ObjectId;
 }
 

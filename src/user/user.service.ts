@@ -22,5 +22,29 @@ export class UserService {
   registerPatient = (payload: RegisterPatientInput) =>
     new this.userModel({ ...payload, role: 'patient' }).save();
 
-  listDoctors = (filters?: ListDoctorInput) => this.userModel.find({ filters });
+  listDoctors = (filters?: ListDoctorInput) => this.userModel.find(filters);
+
+  addDoctorToFavorites = (
+    patientId: Schema.Types.ObjectId,
+    doctorId: Schema.Types.ObjectId,
+  ) =>
+    this.userModel.findByIdAndUpdate(
+      patientId,
+      {
+        $push: { favoriteDoctors: doctorId },
+      },
+      { new: true },
+    );
+
+  removeDoctorToFavorites = (
+    patientId: Schema.Types.ObjectId,
+    doctorId: Schema.Types.ObjectId,
+  ) =>
+    this.userModel.findByIdAndUpdate(
+      patientId,
+      {
+        $pull: { favoriteDoctors: doctorId },
+      },
+      { new: true },
+    );
 }

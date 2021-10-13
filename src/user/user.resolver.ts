@@ -10,6 +10,8 @@ import {
 import { GqlAuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/decorators/current-user';
+import { Roles } from 'src/role/role.decorator';
+import { Schema } from 'mongoose';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -17,8 +19,34 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  async me(@CurrentUser() user: User) {
-    return user;
+  async me(@CurrentUser() { _id }: User) {
+    return this.userService.findById(_id);
+  }
+
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  @Roles('patient')
+  async addDoctorToFavorites(
+    @CurrentUser() { _id }: User,
+    @Args('doctorId', { type: () => String }) doctorId: string,
+  ) {
+    return this.userService.addDoctorToFavorites(
+      _id,
+      new Schema.Types.ObjectId(doctorId),
+    );
+  }
+
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  @Roles('patient')
+  async removeDoctorToFavorites(
+    @CurrentUser() { _id }: User,
+    @Args('doctorId', { type: () => String }) doctorId: string,
+  ) {
+    return this.userService.addDoctorToFavorites(
+      _id,
+      new Schema.Types.ObjectId(doctorId),
+    );
   }
 
   @Query(() => [User])

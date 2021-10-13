@@ -40,4 +40,10 @@ ChatSchema.pre('find', function () {
   this.populate('receiver').populate('sender');
 });
 
+ChatSchema.post('save', (doc, next) => {
+  Promise.all([doc.populate('receiver'), doc.populate('sender')]).then(() =>
+    next(),
+  );
+});
+
 export { ChatSchema };
